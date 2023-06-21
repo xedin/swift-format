@@ -60,7 +60,7 @@ public final class SwiftLinter {
   public func lint(
     contentsOf url: URL,
     parsingDiagnosticHandler: ((Diagnostic, SourceLocation) -> Void)? = nil
-  ) throws {
+  ) throws -> Statistics {
     guard FileManager.default.isReadableFile(atPath: url.path) else {
       throw SwiftFormatError.fileNotReadable
     }
@@ -74,7 +74,7 @@ public final class SwiftLinter {
       operatorTable: .standardOperators,
       assumingFileURL: url,
       parsingDiagnosticHandler: parsingDiagnosticHandler)
-    try lint(
+    return try lint(
       syntax: sourceFile, operatorTable: .standardOperators, assumingFileURL: url, source: source)
   }
 
@@ -95,13 +95,13 @@ public final class SwiftLinter {
     source: String,
     assumingFileURL url: URL,
     parsingDiagnosticHandler: ((Diagnostic, SourceLocation) -> Void)? = nil
-  ) throws {
+  ) throws -> Statistics {
     let sourceFile = try parseAndEmitDiagnostics(
       source: source,
       operatorTable: .standardOperators,
       assumingFileURL: url,
       parsingDiagnosticHandler: parsingDiagnosticHandler)
-    try lint(
+    return try lint(
       syntax: sourceFile, operatorTable: .standardOperators, assumingFileURL: url, source: source)
   }
 
@@ -124,8 +124,8 @@ public final class SwiftLinter {
     syntax: SourceFileSyntax,
     operatorTable: OperatorTable,
     assumingFileURL url: URL
-  ) throws {
-    try lint(syntax: syntax, operatorTable: operatorTable, assumingFileURL: url, source: nil)
+  ) throws -> Statistics {
+    return try lint(syntax: syntax, operatorTable: operatorTable, assumingFileURL: url, source: nil)
   }
 
   private func lint(
@@ -133,7 +133,7 @@ public final class SwiftLinter {
     operatorTable: OperatorTable,
     assumingFileURL url: URL,
     source: String?
-  ) throws {
+  ) throws -> Statistics {
     let context = Context(
       configuration: configuration, operatorTable: operatorTable, findingConsumer: findingConsumer,
       fileURL: url, sourceFileSyntax: syntax, source: source, ruleNameCache: ruleNameCache)
@@ -141,7 +141,7 @@ public final class SwiftLinter {
     pipeline.walk(Syntax(syntax))
 
     if debugOptions.contains(.disablePrettyPrint) {
-      return
+      return context.statistics
     }
 
     // Perform whitespace linting by comparing the input source text with the output of the
@@ -154,5 +154,7 @@ public final class SwiftLinter {
     let formatted = printer.prettyPrint()
     let ws = WhitespaceLinter(user: syntax.description, formatted: formatted, context: context)
     ws.lint()
+
+    return context.statistics
   }
 }

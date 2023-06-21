@@ -57,10 +57,12 @@ extension Rule {
       syntaxLocation = node?.startLocation(converter: context.sourceLocationConverter)
     }
 
+    let category = RuleBasedFindingCategory(ruleType: type(of: self))
     context.findingEmitter.emit(
         message,
-        category: RuleBasedFindingCategory(ruleType: type(of: self)),
+        category: category,
         location: syntaxLocation.flatMap(Finding.Location.init),
         notes: notes)
+    context.statistics.recordFinding(category.defaultSeverity)
   }
 }

@@ -28,9 +28,32 @@ extension SwiftFormatCommand {
     )
     var strict: Bool = false
 
+    @Flag(name: .long,
+          help: "Output statistics about processed files and lint score")
+    var printStatistics: Bool = false
+
     func run() throws {
       let frontend = LintFrontend(lintFormatOptions: lintOptions)
       frontend.run()
+
+      if (printStatistics) {
+        var totalStmts = 0
+        var totalErrors = 0
+        var totalWarnings = 0
+
+        frontend.processStatistics {
+          totalStmts += $1.statements
+          totalErrors += $1.errors
+          totalWarnings += $1.warnings
+        }
+
+        let score = 10.0 - ((5.0 * Double(totalErrors) + Double(totalWarnings)) / Double(totalStmts)) * 10.0
+        print("----------------------------------")
+        print("-- Total Statements: \(totalStmts)")
+        print("-- Total Errors: \(totalErrors)")
+        print("-- Total Warnings: \(totalWarnings)")
+        print("-- Score: \(score)")
+      }
 
       if frontend.diagnosticsEngine.hasErrors || strict && frontend.diagnosticsEngine.hasWarnings {
         throw ExitCode.failure

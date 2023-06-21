@@ -13,11 +13,18 @@
 import Foundation
 import SwiftDiagnostics
 import SwiftFormat
+import SwiftFormatCore
 import SwiftFormatConfiguration
 import SwiftSyntax
 
 /// The frontend for linting operations.
 class LintFrontend: Frontend {
+  private var statistics: [URL: Statistics] = [:]
+
+  func processStatistics(_ processor: (URL, Statistics) -> Void) {
+    statistics.forEach(processor)
+  }
+
   override func processFile(_ fileToProcess: FileToProcess) {
     let linter = SwiftLinter(
       configuration: fileToProcess.configuration, findingConsumer: diagnosticsEngine.consumeFinding)
@@ -31,7 +38,7 @@ class LintFrontend: Frontend {
     }
 
     do {
-      try linter.lint(
+      statistics[url] = try linter.lint(
         source: source,
         assumingFileURL: url) { (diagnostic, location) in
           guard !self.lintFormatOptions.ignoreUnparsableFiles else {
@@ -40,7 +47,6 @@ class LintFrontend: Frontend {
           }
           self.diagnosticsEngine.consumeParserDiagnostic(diagnostic, location)
       }
-
     } catch SwiftFormatError.fileNotReadable {
       diagnosticsEngine.emitError(
         "Unable to lint \(url.relativePath): file is not readable or does not exist.")

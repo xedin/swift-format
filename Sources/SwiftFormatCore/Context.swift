@@ -60,6 +60,9 @@ public final class Context {
   /// Contains all the available rules' names associated to their types' object identifiers.
   public let ruleNameCache: [ObjectIdentifier: String]
 
+  /// Helps to gather statistics about processed source.
+  public let statistics = Statistics()
+
   /// Creates a new Context with the provided configuration, diagnostic engine, and file URL.
   public init(
     configuration: Configuration,
