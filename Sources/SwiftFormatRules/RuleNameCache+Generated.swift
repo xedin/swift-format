@@ -18,6 +18,7 @@ public let ruleNameCache: [ObjectIdentifier: String] = [
   ObjectIdentifier(AlwaysUseLowerCamelCase.self): "AlwaysUseLowerCamelCase",
   ObjectIdentifier(AmbiguousTrailingClosureOverload.self): "AmbiguousTrailingClosureOverload",
   ObjectIdentifier(BeginDocumentationCommentWithOneLineSummary.self): "BeginDocumentationCommentWithOneLineSummary",
+  ObjectIdentifier(DisfavoredAPI.self): "DisfavoredAPI",
   ObjectIdentifier(DoNotUseSemicolons.self): "DoNotUseSemicolons",
   ObjectIdentifier(DontRepeatTypeInStaticProperties.self): "DontRepeatTypeInStaticProperties",
   ObjectIdentifier(FileScopedDeclarationPrivacy.self): "FileScopedDeclarationPrivacy",
