@@ -37,7 +37,8 @@ func parseAndEmitDiagnostics(
   source: String,
   operatorTable: OperatorTable,
   assumingFileURL url: URL?,
-  parsingDiagnosticHandler: ((Diagnostic, SourceLocation) -> Void)? = nil
+  parsingDiagnosticHandler: ((Diagnostic, SourceLocation) -> Void)? = nil,
+  ignoreErrors: Bool = false
 ) throws -> SourceFileSyntax {
   let sourceFile =
     operatorTable.foldAll(Parser.parse(source: source)) { _ in }.as(SourceFileSyntax.self)!
@@ -61,7 +62,7 @@ func parseAndEmitDiagnostics(
     }
   }
 
-  guard !hasErrors else {
+  if !diagnostics.isEmpty && !ignoreErrors {
     throw SwiftFormatError.fileContainsInvalidSyntax
   }
 

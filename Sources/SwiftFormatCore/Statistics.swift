@@ -27,9 +27,13 @@ public class Statistics {
   }
 
   public func recordFinding(_ severity: Finding.Severity) {
+    recordFindings(1, severity: severity)
+  }
+
+  public func recordFindings(_ instances: Int, severity: Finding.Severity) {
     switch severity {
-    case .warning: warnings += 1
-    case .error: errors += 1
+    case .warning: warnings += instances
+    case .error: errors += instances
     }
   }
 }

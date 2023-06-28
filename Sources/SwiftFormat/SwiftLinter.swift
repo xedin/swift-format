@@ -96,13 +96,21 @@ public final class SwiftLinter {
     assumingFileURL url: URL,
     parsingDiagnosticHandler: ((Diagnostic, SourceLocation) -> Void)? = nil
   ) throws -> Statistics {
+    var numParsingErrors: Int = 0
     let sourceFile = try parseAndEmitDiagnostics(
       source: source,
       operatorTable: .standardOperators,
       assumingFileURL: url,
-      parsingDiagnosticHandler: parsingDiagnosticHandler)
-    return try lint(
-      syntax: sourceFile, operatorTable: .standardOperators, assumingFileURL: url, source: source)
+      parsingDiagnosticHandler: {
+        parsingDiagnosticHandler?($0, $1)
+        numParsingErrors += 1
+      },
+      ignoreErrors: true)
+
+    let lintStats = try lint(
+        syntax: sourceFile, operatorTable: .standardOperators, assumingFileURL: url, source: source)
+    lintStats.recordFindings(numParsingErrors, severity: .error)
+    return lintStats
   }
 
   /// Lints the given Swift syntax tree.
