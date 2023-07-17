@@ -27,6 +27,7 @@ enum RuleRegistry {
     "NeverForceUnwrap": false,
     "NeverUseForceTry": false,
     "NeverUseImplicitlyUnwrappedOptionals": false,
+    "NeverUseNonLiteralArrayConstruction": true,
     "NoAccessLevelOnExtensionDeclaration": true,
     "NoAssignmentInExpressions": true,
     "NoBlockComments": true,

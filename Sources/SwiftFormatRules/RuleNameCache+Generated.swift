@@ -27,6 +27,7 @@ public let ruleNameCache: [ObjectIdentifier: String] = [
   ObjectIdentifier(NeverForceUnwrap.self): "NeverForceUnwrap",
   ObjectIdentifier(NeverUseForceTry.self): "NeverUseForceTry",
   ObjectIdentifier(NeverUseImplicitlyUnwrappedOptionals.self): "NeverUseImplicitlyUnwrappedOptionals",
+  ObjectIdentifier(NeverUseNonLiteralArrayConstruction.self): "NeverUseNonLiteralArrayConstruction",
   ObjectIdentifier(NoAccessLevelOnExtensionDeclaration.self): "NoAccessLevelOnExtensionDeclaration",
   ObjectIdentifier(NoAssignmentInExpressions.self): "NoAssignmentInExpressions",
   ObjectIdentifier(NoBlockComments.self): "NoBlockComments",

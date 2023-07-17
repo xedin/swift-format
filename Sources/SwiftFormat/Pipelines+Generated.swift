@@ -74,11 +74,6 @@ class LintPipeline: SyntaxVisitor {
     return .visitChildren
   }
 
-  override func visit(_ node: CodeBlockItemSyntax) -> SyntaxVisitorContinueKind {
-    context.statistics.recordStatement()
-    return .visitChildren
-  }
-
   override func visit(_ node: CodeBlockSyntax) -> SyntaxVisitorContinueKind {
     visitIfEnabled(AmbiguousTrailingClosureOverload.visit, for: node)
     return .visitChildren
@@ -135,6 +130,7 @@ class LintPipeline: SyntaxVisitor {
   }
 
   override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    visitIfEnabled(NeverUseNonLiteralArrayConstruction.visit, for: node)
     visitIfEnabled(NoEmptyTrailingClosureParentheses.visit, for: node)
     visitIfEnabled(OnlyOneTrailingClosureArgument.visit, for: node)
     return .visitChildren
@@ -206,11 +202,6 @@ class LintPipeline: SyntaxVisitor {
 
   override func visit(_ node: MemberDeclListSyntax) -> SyntaxVisitorContinueKind {
     visitIfEnabled(DoNotUseSemicolons.visit, for: node)
-    return .visitChildren
-  }
-
-  override func visit(_ node: MemberDeclListItemSyntax) -> SyntaxVisitorContinueKind {
-    context.statistics.recordStatement()
     return .visitChildren
   }
 
