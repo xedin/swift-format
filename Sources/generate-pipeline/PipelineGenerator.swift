@@ -65,6 +65,9 @@ final class PipelineGenerator: FileGenerator {
       """
     )
 
+    var sawCodeBlock = false
+    var sawMemberList = false
+
     for (nodeType, lintRules) in ruleCollector.syntaxNodeLinters.sorted(by: { $0.key < $1.key }) {
       handle.write(
         """
@@ -72,6 +75,24 @@ final class PipelineGenerator: FileGenerator {
           override func visit(_ node: \(nodeType)) -> SyntaxVisitorContinueKind {
 
         """)
+
+      if nodeType == "CodeBlockItemListSyntax" {
+        handle.write(
+          """
+              context.statistics.recordStatement()
+
+          """)
+        sawCodeBlock = true
+      }
+
+      if nodeType == "MemberDeclListItemSyntax" {
+        handle.write(
+          """
+              context.statistics.recordStatement()
+
+          """)
+        sawMemberList = true
+      }
 
       for ruleName in lintRules.sorted() {
         handle.write(
@@ -87,6 +108,30 @@ final class PipelineGenerator: FileGenerator {
           }
 
         """)
+    }
+
+    if !sawCodeBlock {
+      handle.write(
+        """
+          override func visit(_ node: CodeBlockItemSyntax) -> SyntaxVisitorContinueKind {
+            context.statistics.recordStatement()
+            return .visitChildren
+          }
+
+        """
+      )
+    }
+
+    if !sawMemberList {
+      handle.write(
+        """
+          override func visit(_ node: MemberDeclListItemSyntax) -> SyntaxVisitorContinueKind {
+            context.statistics.recordStatement()
+            return .visitChildren
+          }
+
+        """
+      )
     }
 
     handle.write(

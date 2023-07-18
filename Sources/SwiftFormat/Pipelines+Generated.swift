@@ -67,6 +67,7 @@ class LintPipeline: SyntaxVisitor {
   }
 
   override func visit(_ node: CodeBlockItemListSyntax) -> SyntaxVisitorContinueKind {
+    context.statistics.recordStatement()
     visitIfEnabled(DoNotUseSemicolons.visit, for: node)
     visitIfEnabled(NoAssignmentInExpressions.visit, for: node)
     visitIfEnabled(OneVariableDeclarationPerLine.visit, for: node)
@@ -316,6 +317,10 @@ class LintPipeline: SyntaxVisitor {
     visitIfEnabled(BeginDocumentationCommentWithOneLineSummary.visit, for: node)
     visitIfEnabled(NeverUseImplicitlyUnwrappedOptionals.visit, for: node)
     visitIfEnabled(UseTripleSlashForDocumentationComments.visit, for: node)
+    return .visitChildren
+  }
+  override func visit(_ node: MemberDeclListItemSyntax) -> SyntaxVisitorContinueKind {
+    context.statistics.recordStatement()
     return .visitChildren
   }
 }
