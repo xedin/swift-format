@@ -135,6 +135,7 @@ class LintPipeline: SyntaxVisitor {
     visitIfEnabled(NeverUseNonLiteralArrayConstruction.visit, for: node)
     visitIfEnabled(NoEmptyTrailingClosureParentheses.visit, for: node)
     visitIfEnabled(OnlyOneTrailingClosureArgument.visit, for: node)
+    visitIfEnabled(ReplaceForEachWithForLoop.visit, for: node)
     return .visitChildren
   }
 
