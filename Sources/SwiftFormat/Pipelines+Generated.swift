@@ -131,6 +131,7 @@ class LintPipeline: SyntaxVisitor {
   }
 
   override func visit(_ node: FunctionCallExprSyntax) -> SyntaxVisitorContinueKind {
+    visitIfEnabled(DisfavoredAPI.visit, for: node)
     visitIfEnabled(NeverUseNonLiteralArrayConstruction.visit, for: node)
     visitIfEnabled(NoEmptyTrailingClosureParentheses.visit, for: node)
     visitIfEnabled(OnlyOneTrailingClosureArgument.visit, for: node)
@@ -329,6 +330,7 @@ extension FormatPipeline {
 
   func rewrite(_ node: Syntax) -> Syntax {
     var node = node
+    node = DisfavoredAPI(context: context).rewrite(node)
     node = DoNotUseSemicolons(context: context).rewrite(node)
     node = FileScopedDeclarationPrivacy(context: context).rewrite(node)
     node = FullyIndirectEnum(context: context).rewrite(node)
