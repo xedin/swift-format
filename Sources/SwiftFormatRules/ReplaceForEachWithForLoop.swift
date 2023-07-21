@@ -40,7 +40,7 @@ public final class ReplaceForEachWithForLoop : SyntaxLintRule {
 
     if let closure = node.trailingClosure,
            closure.statements.count == 1 {
-      diagnose(.replaceForEachWithLoop(), on: member)
+      diagnose(.replaceForEachWithLoop(), on: member, severity: .refactoring)
     }
 
     return .visitChildren

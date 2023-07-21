@@ -48,7 +48,9 @@ public final class NeverUseNonLiteralArrayConstruction : SyntaxLintRule {
       withFixIt = ": [\(element)] = []"
     }
 
-    diagnose(.refactorLiteralArrayInit(replace: "\(call)", with: withFixIt), on: call.parent)
+    diagnose(.refactorLiteralArrayInit(replace: "\(call)", with: withFixIt),
+             on: call.parent,
+             severity: .refactoring)
     return true
   }
 
