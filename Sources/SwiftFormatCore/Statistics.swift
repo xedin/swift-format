@@ -22,6 +22,9 @@ public class Statistics {
   /// The number of warnings emitted during processing.
   public private(set) var warnings: Int = 0
 
+  /// The number of refactoring suggestions emitted during processing.
+  public private(set) var refactorings: Int = 0
+
   public func recordStatement() {
     statements += 1
   }
@@ -34,6 +37,7 @@ public class Statistics {
     switch severity {
     case .warning: warnings += instances
     case .error: errors += instances
+    case .refactoring: refactorings += instances
     }
   }
 }
