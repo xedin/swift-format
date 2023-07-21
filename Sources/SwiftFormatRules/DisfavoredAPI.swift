@@ -20,8 +20,6 @@ public final class DisfavoredAPI: SyntaxFormatRule {
     "%",
     // Mid-level, these have been replaced by stdlib alternatives: components(separatedBy:), etc.
     "componentsSeparatedByString", "rangeOfString", "stringByReplacingOccurrencesOfString",
-    // High-level, there's no reason to use this.
-    "forEach"
   ]
 
   public override func visit(_ node: FunctionCallExprSyntax) -> ExprSyntax {
