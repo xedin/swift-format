@@ -27,7 +27,7 @@ public final class DisfavoredAPI: SyntaxFormatRule {
       return super.visit(node)
     }
     if disfavoredAPIs.contains(name.text) {
-      diagnose(.disfavoredAPI(name.text), on: name)
+      diagnose(.disfavoredAPI(name.text), on: name, severity: .refactoring)
     }
     return super.visit(node)
   }
