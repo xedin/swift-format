@@ -25,6 +25,9 @@ public class Statistics {
   /// The number of refactoring suggestions emitted during processing.
   public private(set) var refactorings: Int = 0
 
+  /// The number of convention errors emitted during processing.
+  public private(set) var conventions: Int = 0
+
   public func recordStatement() {
     statements += 1
   }
@@ -38,6 +41,7 @@ public class Statistics {
     case .warning: warnings += instances
     case .error: errors += instances
     case .refactoring: refactorings += instances
+    case .convention: conventions += instances
     }
   }
 }

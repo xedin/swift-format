@@ -41,20 +41,23 @@ extension SwiftFormatCommand {
         var totalErrors = 0
         var totalWarnings = 0
         var totalRefactorings = 0
+        var totalConventions = 0
 
         frontend.processStatistics {
           totalStmts += $1.statements
           totalErrors += $1.errors
           totalWarnings += $1.warnings
           totalRefactorings += $1.refactorings
+          totalConventions += $1.conventions
         }
 
-        let score = 10.0 - ((5.0 * Double(totalErrors) + Double(totalWarnings) + Double(totalRefactorings)) / Double(totalStmts)) * 10.0
+        let score = 10.0 - ((5.0 * Double(totalErrors) + Double(totalWarnings) + Double(totalRefactorings) + Double(totalConventions)) / Double(totalStmts)) * 10.0
         print("----------------------------------")
         print("-- Total Statements: \(totalStmts)")
         print("-- Total Errors: \(totalErrors)")
         print("-- Total Warnings: \(totalWarnings)")
         print("-- Total Refactorings: \(totalRefactorings)")
+        print("-- Total Conventions: \(totalConventions)")
         print("-- Score: \(score)")
       }
 
