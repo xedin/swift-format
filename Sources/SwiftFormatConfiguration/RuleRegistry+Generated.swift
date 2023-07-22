@@ -44,6 +44,7 @@ enum RuleRegistry {
     "OrderedImports": true,
     "ReplaceForEachWithForLoop": true,
     "ReturnVoidInsteadOfEmptyTuple": true,
+    "TypeNamesShouldBeCapitalized": true,
     "UseEarlyExits": false,
     "UseLetInEveryBoundCaseVariable": true,
     "UseShorthandTypeNames": true,

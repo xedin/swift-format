@@ -51,6 +51,7 @@ class LintPipeline: SyntaxVisitor {
     visitIfEnabled(BeginDocumentationCommentWithOneLineSummary.visit, for: node)
     visitIfEnabled(DontRepeatTypeInStaticProperties.visit, for: node)
     visitIfEnabled(NoLeadingUnderscores.visit, for: node)
+    visitIfEnabled(TypeNamesShouldBeCapitalized.visit, for: node)
     visitIfEnabled(UseTripleSlashForDocumentationComments.visit, for: node)
     return .visitChildren
   }
@@ -109,6 +110,7 @@ class LintPipeline: SyntaxVisitor {
     visitIfEnabled(FullyIndirectEnum.visit, for: node)
     visitIfEnabled(NoLeadingUnderscores.visit, for: node)
     visitIfEnabled(OneCasePerLine.visit, for: node)
+    visitIfEnabled(TypeNamesShouldBeCapitalized.visit, for: node)
     visitIfEnabled(UseTripleSlashForDocumentationComments.visit, for: node)
     return .visitChildren
   }
@@ -228,6 +230,7 @@ class LintPipeline: SyntaxVisitor {
     visitIfEnabled(BeginDocumentationCommentWithOneLineSummary.visit, for: node)
     visitIfEnabled(DontRepeatTypeInStaticProperties.visit, for: node)
     visitIfEnabled(NoLeadingUnderscores.visit, for: node)
+    visitIfEnabled(TypeNamesShouldBeCapitalized.visit, for: node)
     visitIfEnabled(UseTripleSlashForDocumentationComments.visit, for: node)
     return .visitChildren
   }
@@ -263,6 +266,7 @@ class LintPipeline: SyntaxVisitor {
     visitIfEnabled(BeginDocumentationCommentWithOneLineSummary.visit, for: node)
     visitIfEnabled(DontRepeatTypeInStaticProperties.visit, for: node)
     visitIfEnabled(NoLeadingUnderscores.visit, for: node)
+    visitIfEnabled(TypeNamesShouldBeCapitalized.visit, for: node)
     visitIfEnabled(UseSynthesizedInitializer.visit, for: node)
     visitIfEnabled(UseTripleSlashForDocumentationComments.visit, for: node)
     return .visitChildren

@@ -44,6 +44,7 @@ public let ruleNameCache: [ObjectIdentifier: String] = [
   ObjectIdentifier(OrderedImports.self): "OrderedImports",
   ObjectIdentifier(ReplaceForEachWithForLoop.self): "ReplaceForEachWithForLoop",
   ObjectIdentifier(ReturnVoidInsteadOfEmptyTuple.self): "ReturnVoidInsteadOfEmptyTuple",
+  ObjectIdentifier(TypeNamesShouldBeCapitalized.self): "TypeNamesShouldBeCapitalized",
   ObjectIdentifier(UseEarlyExits.self): "UseEarlyExits",
   ObjectIdentifier(UseLetInEveryBoundCaseVariable.self): "UseLetInEveryBoundCaseVariable",
   ObjectIdentifier(UseShorthandTypeNames.self): "UseShorthandTypeNames",
