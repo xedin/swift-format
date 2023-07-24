@@ -11,6 +11,7 @@
 //===----------------------------------------------------------------------===//
 
 import ArgumentParser
+import Foundation
 
 extension SwiftFormatCommand {
   /// Emits style diagnostics for one or more files containing Swift code.
@@ -32,9 +33,16 @@ extension SwiftFormatCommand {
           help: "Output statistics about processed files and lint score")
     var printStatistics: Bool = false
 
+    @Option(help: "Output lint scores for each processed files to <path> in JSON format")
+    var scoresPath: String? = nil
+
     func run() throws {
       let frontend = LintFrontend(lintFormatOptions: lintOptions)
       frontend.run()
+
+      func score(statements: Int, errors: Int, warnings: Int, refactorings: Int, conventions: Int) -> Double {
+        return 10.0 - ((5.0 * Double(errors) + Double(warnings) + Double(refactorings) + Double(conventions)) / Double(statements)) * 10.0
+      }
 
       if (printStatistics) {
         var totalStmts = 0
@@ -51,7 +59,7 @@ extension SwiftFormatCommand {
           totalConventions += $1.conventions
         }
 
-        let score = 10.0 - ((5.0 * Double(totalErrors) + Double(totalWarnings) + Double(totalRefactorings) + Double(totalConventions)) / Double(totalStmts)) * 10.0
+        let score = score(statements: totalStmts, errors: totalErrors, warnings: totalWarnings, refactorings: totalRefactorings, conventions: totalConventions)
         print("----------------------------------")
         print("-- Total Statements: \(totalStmts)")
         print("-- Total Errors: \(totalErrors)")
@@ -59,6 +67,19 @@ extension SwiftFormatCommand {
         print("-- Total Refactorings: \(totalRefactorings)")
         print("-- Total Conventions: \(totalConventions)")
         print("-- Score: \(score)")
+      }
+
+      if let scoresPath {
+        // Reorganize the data in a structure encodable into a JSON dictionary.
+        var dict: [String: Double] = [:]
+        frontend.processStatistics { key, value in
+          dict[key.path] = score(statements: value.statements, errors: value.errors, warnings: value.warnings, refactorings: value.refactorings, conventions: value.conventions)
+        }
+
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let statisticsJSON = try! encoder.encode(dict)
+        try! statisticsJSON.write(to: URL(fileURLWithPath: scoresPath))
       }
 
       if frontend.diagnosticsEngine.hasErrors || strict && frontend.diagnosticsEngine.hasWarnings {
