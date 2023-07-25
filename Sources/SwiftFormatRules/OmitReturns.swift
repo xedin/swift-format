@@ -40,6 +40,63 @@ public final class OmitReturns: SyntaxFormatRule {
     return decl
   }
 
+  public override func visit(_ node: SubscriptDeclSyntax) -> DeclSyntax {
+    let decl = super.visit(node)
+
+    guard var `subscript` = decl.as(SubscriptDeclSyntax.self) else {
+      return decl
+    }
+
+    if let accessorList = `subscript`.accessor?.as(AccessorBlockSyntax.self) {
+      // We are assuming valid Swift code here where only
+      // one `get { ... }` is allowed.
+      guard var getter = accessorList.accessors.filter({
+        $0.accessorSpecifier.tokenKind == .keyword(.get)
+      }).first else {
+        return decl
+      }
+
+      guard let body = getter.body,
+            let `return` = containsSingleReturn(body.statements) else {
+        return decl
+      }
+
+      guard let getterAt = accessorList.accessors.firstIndex(of: getter) else {
+        return decl
+      }
+
+      getter.body?.statements = unwrapReturnStmt(`return`)
+
+      `subscript`.accessor = .accessors(
+          AccessorBlockSyntax(
+            leadingTrivia: accessorList.leadingTrivia,
+            leftBrace: accessorList.leftBrace,
+            accessors: accessorList.accessors.with(\.[getterAt], getter),
+            rightBrace: accessorList.rightBrace,
+            trailingTrivia: accessorList.trailingTrivia))
+
+      diagnose(.omitReturnStatement, on: `return`, severity: .refactoring)
+
+      return DeclSyntax(`subscript`)
+    }
+
+    if let body = `subscript`.accessor?.as(CodeBlockSyntax.self),
+       let `return` = containsSingleReturn(body.statements) {
+      diagnose(.omitReturnStatement, on: `return`, severity: .refactoring)
+
+      `subscript`.accessor = .getter(CodeBlockSyntax(
+        leadingTrivia: body.leadingTrivia,
+        leftBrace: body.leftBrace,
+        statements: unwrapReturnStmt(`return`),
+        rightBrace: body.rightBrace,
+        trailingTrivia: body.trailingTrivia))
+
+      return DeclSyntax(`subscript`)
+    }
+
+    return decl
+  }
+
   public override func visit(_ node: ClosureExprSyntax) -> ExprSyntax {
     let expr = super.visit(node)
     if var closure = expr.as(ClosureExprSyntax.self),
