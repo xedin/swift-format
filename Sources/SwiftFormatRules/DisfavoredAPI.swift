@@ -586,7 +586,7 @@ public final class DisfavoredAPI: SyntaxFormatRule {
       return super.visit(node)
     }
     if disfavoredAPIs.contains(name.text) {
-      diagnose(.disfavoredAPI(name.text), on: name, severity: .refactoring)
+      diagnose(.disfavoredAPI(name.text), on: name, severity: .error)
     }
     return super.visit(node)
   }
@@ -594,7 +594,7 @@ public final class DisfavoredAPI: SyntaxFormatRule {
   public override func visit(_ node: SimpleTypeIdentifierSyntax) -> TypeSyntax {
     let name = node.name
     if disfavoredAPIs.contains(name.text) {
-      diagnose(.disfavoredAPI(name.text), on: name, severity: .refactoring)
+      diagnose(.disfavoredAPI(name.text), on: name, severity: .error)
     }
     return super.visit(node)
   }
