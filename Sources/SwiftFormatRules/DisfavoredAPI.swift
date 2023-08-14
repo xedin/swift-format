@@ -16,9 +16,7 @@ import SwiftFormatCore
 public final class DisfavoredAPI: SyntaxFormatRule {
 
   let disfavoredAPIs = [
-    // Lower level, these heuristics are less precise as there could still be relevant in some context.
-    "%",
-    // Mid-level, these have been replaced by stdlib alternatives: components(separatedBy:), etc.
+    // Foundation Objective-C variants of APIs
     "componentsSeparatedByString", "rangeOfString", "stringByReplacingOccurrencesOfString",
   ]
 
