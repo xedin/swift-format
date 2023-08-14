@@ -31,6 +31,14 @@ public final class DisfavoredAPI: SyntaxFormatRule {
     }
     return super.visit(node)
   }
+
+  public override func visit(_ node: SimpleTypeIdentifierSyntax) -> TypeSyntax {
+    let name = node.name
+    if disfavoredAPIs.contains(name.text) {
+      diagnose(.disfavoredAPI(name.text), on: name, severity: .refactoring)
+    }
+    return super.visit(node)
+  }
 }
 
 extension Finding.Message {
