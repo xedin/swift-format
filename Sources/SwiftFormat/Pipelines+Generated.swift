@@ -248,6 +248,7 @@ class LintPipeline: SyntaxVisitor {
   }
 
   override func visit(_ node: SimpleTypeIdentifierSyntax) -> SyntaxVisitorContinueKind {
+    visitIfEnabled(DisfavoredAPI.visit, for: node)
     visitIfEnabled(UseShorthandTypeNames.visit, for: node)
     return .visitChildren
   }
